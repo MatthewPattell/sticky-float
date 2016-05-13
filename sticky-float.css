@@ -1,0 +1,9 @@
+.sticked {
+    position: fixed !important;
+    top: 0;
+    transform: translateZ(0px);
+}
+
+.sticked-stop {
+    position: absolute;
+}
