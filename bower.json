@@ -14,6 +14,7 @@
   ],
   "license": "BSD-3-Clause",
   "dependencies": {
-    "jquery": "~2.1.0"
+    "jquery": "~2.1.0",
+    "jquery-throttle-debounce": "https://github.com/cowboy/jquery-throttle-debounce.git"
   }
 }
