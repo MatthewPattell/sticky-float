@@ -1,0 +1,19 @@
+{
+  "name": "sticky-float",
+  "main": "sticky-float.js",
+  "homepage": "https://github.com/MatthewPattell/sticky-float",
+  "authors": [
+    "Matthew Patell <hellboymxb@gmail.com>"
+  ],
+  "description": "jQuery plugin sticky float for html elements",
+  "keywords": [
+    "jquery",
+    "plugin",
+    "stickyfloat",
+    "sticky"
+  ],
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "jquery": "~2.1.0"
+  }
+}

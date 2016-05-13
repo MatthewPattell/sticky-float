@@ -1,6 +1,6 @@
 {
   "name": "matthew-p/sticky-float",
-  "description": "Plugin sticky float for html elements",
+  "description": "jQuery plugin sticky float for html elements",
   "type": "jquery-plugin",
   "keywords": ["jquery","plugin","stickyfloat","sticky"],
   "license": "BSD-3-Clause",
