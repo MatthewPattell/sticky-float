@@ -26,29 +26,26 @@
          */
         init: function ( args ) {
 
-            var self   = this,
-                isInit = self.data('sticky');
+            if( !this.data('sticky') ) {
 
-            if( !isInit ) {
+                this.options  = $.extend({}, $options, args);
+                this.varibles = {};
 
-                self.options = $.extend({}, $options, args);
-                self.varibles = {};
+                this.varibles.distance = this.offset().top - this.options.top;
+                this.varibles.parent   = this.options.parent ? this.options.parent : this.parent();
+                this.varibles.offset   = this.varibles.parent.offset().top - this.options.top - this.outerHeight(true);
 
-                self.varibles.distance = self.offset().top - self.options.top;
-                self.varibles.parent   = self.options.parent ? self.options.parent : self.parent();
-                self.varibles.offset   = self.varibles.parent.offset().top - self.options.top - self.outerHeight(true);
+                this.varibles.stick = false;
+                this.varibles.stop  = false;
 
-                self.varibles.stick = false;
-                self.varibles.stop  = false;
-
-                if (self.options.spacer) {
-                    self.varibles.spacer = $("<div />");
-                    self.before( self.varibles.spacer );
+                if (this.options.spacer) {
+                    this.varibles.spacer = $("<div />");
+                    this.before( this.varibles.spacer );
                 }
 
                 this.data('sticky', true);
 
-                $elements.push( self );
+                $elements.push( this );
             }
 
             $window.scroll( _scroll );
@@ -61,10 +58,9 @@
          */
         destroy: function () {
 
-            var self   = this,
-                isInit = self.data('sticky');
+            var self   = this;
 
-            if(isInit) {
+            if( self.data('sticky') ) {
                 $.each($elements, function (counter, $element) {
                     if($element && $element.get(0) === self.get(0)) {
 
