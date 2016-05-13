@@ -20,9 +20,19 @@ Then include this plugin:
 <script src="sticky-float/sticky-float.js"></script>
 ```
 
-And usage:
+And simple usage:
 ```js
 $('.example').stickyfloat();
+```
+
+Options:
+```js
+$('.example').stickyfloat({
+    top: 0,           // top margin (number in px)
+    spacer: true,     // create spacer (boolean)
+    saveWidth: false, // save width element (boolean)
+    parent: false     // change parent element (boolean or jQuery element)
+});
 ```
 
 That's all. Check it.
