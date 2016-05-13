@@ -87,7 +87,7 @@
     /**
      * Function event scroll
      */
-    var _scroll = $.throttle(50, function () {
+    var _scroll = $.throttle(20, function () {
 
         if( $elements.length ) {
             $.each($elements, function (counter, $elm) {
@@ -122,13 +122,13 @@
         _unstick($element);
 
         if( $element.options.saveWidth )
-            $element.css({width: $element.outerWidth(true) + 'px'});
+            $element.css({width: $element.width() + 'px'});
 
         $element
             .css({top: $element.options.top + 'px'})
             .addClass('sticked');
 
-        if(!$element.is(':empty') && $element.varibles.spacer) {
+        if($element.varibles.spacer && !$element.is(':empty')) {
             $element.varibles.spacer.css({
                 width: '20px',
                 height: $element.outerHeight(true),
@@ -158,9 +158,8 @@
         if( $element.options.saveWidth )
             $element.css({width:''});
 
-        if(!$element.is(':empty') && $element.varibles.spacer) {
+        if($element.varibles.spacer && !$element.is(':empty'))
             $element.varibles.spacer.css({display: 'none'});
-        }
 
         $element.varibles.stop = false;
         $element.varibles.stick= false;
@@ -174,7 +173,14 @@
     var _stop = function ($element) {
 
         $element
-            .css({top: $element.varibles.parent.outerHeight() - $element.outerHeight()})
+            .css({
+                top:
+                    (
+                        $element.varibles.parent.css('position') === 'relative' ? 0 : $element.varibles.distance
+                    )
+                    + $element.varibles.parent.outerHeight()
+                    - $element.outerHeight()
+            })
             .addClass('sticked-stop')
             .removeClass('sticked');
 
