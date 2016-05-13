@@ -1,6 +1,14 @@
 # sticky-float
 Plugin sticky float for html elements
 
+Installation
+-----
+
+With bower:
+```bash
+$ bower install jquery-stickyfloat
+```
+
 Usage
 -----
 
