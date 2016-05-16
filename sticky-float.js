@@ -22,11 +22,11 @@
 
     /**
      * Default variables values for element
-     * @type {{distance: number, parent: jQuery, offset: number, spacer: boolean|object, stick: boolean, stop: boolean}}
+     * @type {{distance: number, parent: null|jQuery, offset: number, spacer: boolean|object, stick: boolean, stop: boolean}}
      */
     var variables = {
         distance: 0,
-        parent: 0,
+        parent: null,
         offset: 0,
         spacer: false,
         stick: false,
@@ -138,7 +138,7 @@
         _unstick(element);
 
         if( element.options.saveWidth )
-            element.object.css({width: element.object.width() + 'px'});
+            element.object.css({width: element.object.outerWidth(true) + 'px'});
 
         element.object
             .css({top: element.options.top + 'px'})
