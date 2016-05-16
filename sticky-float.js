@@ -4,18 +4,34 @@
 
 (function( $ ){
 
-    var $window = jQuery(window),
-        $elements = [],       // all tracked element
-        /**
-         * Default options for element
-         * @type {{top: number, spacer: boolean, saveWidth: boolean, parent: boolean|object}}
-         */
-        $options = {
-            top: 0,           // top margin (in px)
-            spacer: true,     // create spacer
-            saveWidth: false, // save width element
-            parent: false     // change parent element
-        };
+    var jWindow = jQuery(window);
+
+    // all tracked element
+    var elements = [];
+
+    /**
+     * Default options for element
+     * @type {{top: number, spacer: boolean, saveWidth: boolean, parent: boolean|object}}
+     */
+    var options = {
+        top: 0,           // top margin (in px)
+        spacer: true,     // create spacer
+        saveWidth: false, // save width element
+        parent: false     // change parent element
+    };
+
+    /**
+     * Default variables values for element
+     * @type {{distance: number, parent: jQuery, offset: number, spacer: boolean|object, stick: boolean, stop: boolean}}
+     */
+    var variables = {
+        distance: 0,
+        parent: 0,
+        offset: 0,
+        spacer: false,
+        stick: false,
+        stop: false
+    };
 
     var methods = {
 
@@ -28,27 +44,28 @@
 
             if( !this.data('sticky') ) {
 
-                this.options  = $.extend({}, $options, args);
-                this.varibles = {};
+                var new_element = {
+                    object: this,
+                    options: $.extend({}, options, args),
+                    variables: $.extend({}, variables, {})
+                };
 
-                this.varibles.distance = this.offset().top - this.options.top;
-                this.varibles.parent   = this.options.parent ? this.options.parent : this.parent();
-                this.varibles.offset   = this.varibles.parent.offset().top - this.options.top - this.outerHeight(true);
+                new_element.variables.distance = this.offset().top - new_element.options.top;
+                new_element.variables.parent   = new_element.options.parent ? new_element.options.parent : this.parent();
+                new_element.variables.offset   = new_element.variables.parent.offset().top - new_element.options.top - this.outerHeight(true);
 
-                this.varibles.stick = false;
-                this.varibles.stop  = false;
-
-                if (this.options.spacer) {
-                    this.varibles.spacer = $("<div />");
-                    this.before( this.varibles.spacer );
+                if (new_element.options.spacer) {
+                    new_element.variables.spacer = $("<div />");
+                    this.before( new_element.variables.spacer );
                 }
 
                 this.data('sticky', true);
 
-                $elements.push( this );
-            }
+                if(!elements.length)
+                    jWindow.scroll( _scroll );
 
-            $window.scroll( _scroll );
+                elements.push(new_element );
+            }
 
             return this;
         },
@@ -61,11 +78,11 @@
             var self   = this;
 
             if( self.data('sticky') ) {
-                $.each($elements, function (counter, $element) {
-                    if($element && $element.get(0) === self.get(0)) {
+                $.each(elements, function (counter, element) {
+                    if(element && element.object.get(0) === self.get(0)) {
 
-                        _unstick($element);
-                        $elements.splice(counter, 1);
+                        _unstick(element);
+                        elements.splice(counter, 1);
                         self
                             .removeData('sticky')
                             .off('stickyfloat');
@@ -75,8 +92,8 @@
                 });
             }
 
-            if( !$elements.length )
-                $window.off('scroll', _scroll);
+            if( !elements.length )
+                jWindow.off('scroll', _scroll);
         }
     };
 
@@ -85,23 +102,26 @@
      */
     var _scroll = $.throttle(20, function () {
 
-        if( $elements.length ) {
-            $.each($elements, function (counter, $elm) {
+        if( elements.length ) {
 
-                if (!$elm.varibles.stick && !$elm.varibles.stop && ($window.scrollTop() >= $elm.varibles.distance)) {
-                    _stick($elm);
+            var scrollTop = jWindow.scrollTop();
+
+            $.each(elements, function (counter, el) {
+
+                if (!el.variables.stick && !el.variables.stop && (scrollTop >= el.variables.distance)) {
+                    _stick(el);
                 }
 
-                if ($elm.varibles.stick && $window.scrollTop() <= $elm.varibles.distance) {
-                    _unstick($elm);
+                if (el.variables.stick && scrollTop <= el.variables.distance) {
+                    _unstick(el);
                 }
 
-                if (!$elm.varibles.stop && ($window.scrollTop() >= ($elm.varibles.parent.outerHeight() + $elm.varibles.offset))) {
-                    _stop($elm);
+                if (!el.variables.stop && (scrollTop >= (el.variables.parent.outerHeight() + el.variables.offset))) {
+                    _stop(el);
                 }
 
-                if ($elm.varibles.stop && ($window.scrollTop() <= ($elm.varibles.parent.outerHeight() + $elm.varibles.offset))) {
-                    _stick($elm);
+                if (el.variables.stop && (scrollTop <= (el.variables.parent.outerHeight() + el.variables.offset))) {
+                    _stick(el);
                 }
 
             });
@@ -110,85 +130,80 @@
 
     /**
      * Make sticky element
-     * @param $element
+     * @param element
      * @private
      */
-    var _stick = function ($element) {
+    var _stick = function (element) {
 
-        _unstick($element);
+        _unstick(element);
 
-        if( $element.options.saveWidth )
-            $element.css({width: $element.width() + 'px'});
+        if( element.options.saveWidth )
+            element.object.css({width: element.object.width() + 'px'});
 
-        $element
-            .css({top: $element.options.top + 'px'})
+        element.object
+            .css({top: element.options.top + 'px'})
             .addClass('sticked');
 
-        if($element.varibles.spacer && !$element.is(':empty')) {
-            $element.varibles.spacer.css({
+        if(element.variables.spacer && !element.object.is(':empty')) {
+            element.variables.spacer.css({
                 width: '20px',
-                height: $element.outerHeight(true),
+                height: element.object.outerHeight(true),
                 display: 'inherit'
             });
         }
 
-        $element.varibles.stick = true;
+        element.variables.stick = true;
     };
 
     /**
      * Unmake sticky element
-     * @param $element
+     * @param element
      * @returns {boolean}
      * @private
      */
-    var _unstick = function ($element) {
+    var _unstick = function (element) {
 
-        if(!$element.varibles.stick)
+        if(!element.variables.stick)
             return false;
 
-        $element
+        element.object
             .css({top:''})
             .removeClass('sticked-stop')
             .removeClass('sticked');
 
-        if( $element.options.saveWidth )
-            $element.css({width:''});
+        if( element.options.saveWidth )
+            element.object.css({width:''});
 
-        if($element.varibles.spacer && !$element.is(':empty'))
-            $element.varibles.spacer.css({display: 'none'});
+        if(element.variables.spacer && !element.object.is(':empty'))
+            element.variables.spacer.css({display: 'none'});
 
-        $element.varibles.stop = false;
-        $element.varibles.stick= false;
+        element.variables.stop = false;
+        element.variables.stick= false;
     };
 
     /**
      * Stop sticky element at bottom border parent
-     * @param $element
+     * @param element
      * @private
      */
-    var _stop = function ($element) {
+    var _stop = function (element) {
 
-        $element
+        element.object
             .css({
                 top:
                     (
-                        $element.varibles.parent.css('position') === 'relative' ? 0 : $element.varibles.distance
+                        element.variables.parent.css('position') === 'relative' ? 0 : element.variables.distance
                     )
-                    + $element.varibles.parent.outerHeight()
-                    - $element.outerHeight()
+                    + element.variables.parent.outerHeight()
+                    - element.object.outerHeight()
             })
             .addClass('sticked-stop')
             .removeClass('sticked');
 
-        $element.varibles.stop = true;
-        $element.trigger('stickyfloat.stopEvent');
+        element.variables.stop = true;
+        element.object.trigger('stickyfloat.stopEvent');
     };
 
-    /**
-     * New property-function for jQuery
-     * @param method
-     * @returns {*}
-     */
     $.fn.stickyfloat = function( method ) {
 
         if ( methods[method] ) {
