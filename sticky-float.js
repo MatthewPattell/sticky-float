@@ -100,27 +100,25 @@
     /**
      * Function event scroll
      */
-    var _scroll = $.throttle(0, function () {
+    var _scroll = $.throttle(10, function () {
 
         if( elements.length ) {
 
+            // window scroll
             var scrollTop = jWindow.scrollTop();
 
             $.each(elements, function (counter, el) {
 
+                // parent height
+                var parentHeight = el.variables.parent.outerHeight();
+
                 if (!el.variables.stick && !el.variables.stop && (scrollTop >= el.variables.distance)) {
                     _stick(el);
-                }
-
-                if (el.variables.stick && scrollTop <= el.variables.distance) {
+                } else if (el.variables.stick && scrollTop <= el.variables.distance) {
                     _unstick(el);
-                }
-
-                if (!el.variables.stop && (scrollTop >= (el.variables.parent.outerHeight() + el.variables.offset))) {
+                } else if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
                     _stop(el);
-                }
-
-                if (el.variables.stop && (scrollTop <= (el.variables.parent.outerHeight() + el.variables.offset))) {
+                } else if (el.variables.stop  && (scrollTop <= (parentHeight + el.variables.offset))) {
                     _stick(el);
                 }
 
@@ -174,7 +172,7 @@
         if( element.options.saveWidth )
             element.object.css({width:''});
 
-        if(element.variables.spacer && !element.object.is(':empty'))
+        if(element.variables.spacer && !element.object.is(':empty') && !element.variables.stop)
             element.variables.spacer.css({display: 'none'});
 
         element.variables.stop = false;
@@ -200,7 +198,8 @@
             .addClass('sticked-stop')
             .removeClass('sticked');
 
-        element.variables.stop = true;
+        element.variables.stop  = true;
+
         element.object.trigger('stickyfloat.stopEvent');
     };
 
