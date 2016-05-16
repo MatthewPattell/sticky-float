@@ -3,7 +3,7 @@ Plugin sticky float for html elements
 
 Demo
 -----
-[Demo page](http://matthewpattell.github.io/sticky-float/)
+<a href="http://matthewpattell.github.io/sticky-float/" target="_blank">Go to demo page</a>
 
 Installation
 -----
