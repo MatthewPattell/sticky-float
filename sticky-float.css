@@ -1,6 +1,5 @@
 .sticked {
     position: fixed !important;
-    top: 0;
     transform: translateZ(0px);
     box-sizing: border-box;
 }
@@ -8,4 +7,6 @@
 .sticked-stop {
     position: absolute;
     box-sizing: border-box;
+    top: inherit !important;
+    bottom: 0;
 }

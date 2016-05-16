@@ -100,7 +100,7 @@
     /**
      * Function event scroll
      */
-    var _scroll = $.throttle(20, function () {
+    var _scroll = $.throttle(0, function () {
 
         if( elements.length ) {
 
@@ -189,14 +189,14 @@
     var _stop = function (element) {
 
         element.object
-            .css({
+          /*  .css({
                 top:
                     (
                         element.variables.parent.css('position') === 'relative' ? 0 : element.variables.distance
                     )
                     + element.variables.parent.outerHeight()
                     - element.object.outerHeight()
-            })
+            })*/
             .addClass('sticked-stop')
             .removeClass('sticked');
 
