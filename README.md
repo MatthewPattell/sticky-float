@@ -1,6 +1,10 @@
 # sticky-float
 Plugin sticky float for html elements
 
+Demo
+-----
+[Demo page](http://matthewpattell.github.io/sticky-float/)
+
 Installation
 -----
 
