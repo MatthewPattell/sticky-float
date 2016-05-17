@@ -11,13 +11,14 @@
 
     /**
      * Default options for element
-     * @type {{top: number, spacer: boolean, saveWidth: boolean, parent: boolean|object}}
+     * @type {{top: number, spacer: boolean, saveWidth: boolean, parent: boolean|object, bottomStop: boolean}}
      */
     var options = {
         top: 0,           // top margin (in px)
         spacer: true,     // create spacer
-        saveWidth: true, // save width element
-        parent: false     // change parent element
+        saveWidth: true,  // save width element
+        parent: false,    // change parent element
+        bottomStop: true  // stop bottom parent
     };
 
     /**
@@ -129,10 +130,13 @@
                 _unstick(el);
             }
 
-            if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
-                _stop(el);
-            } else if (el.variables.stop  && (scrollTop <= (parentHeight + el.variables.offset))) {
-                _stick(el);
+            // stop element in parent bottom?
+            if(el.options.bottomStop) {
+                if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
+                    _stop(el);
+                } else if (el.variables.stop && (scrollTop <= (parentHeight + el.variables.offset))) {
+                    _stick(el);
+                }
             }
 
         });
