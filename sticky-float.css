@@ -1,12 +1,14 @@
-.sticked {
-    position: fixed !important;
-    transform: translateZ(0px);
+.plg-sticky {
+    transform: translateZ(0);
     box-sizing: border-box;
 }
 
-.sticked-stop {
+.plg-sticked {
+    position: fixed !important;
+}
+
+.plg-sticked-stop {
     position: absolute;
-    box-sizing: border-box;
     top: inherit !important;
     bottom: 0;
 }

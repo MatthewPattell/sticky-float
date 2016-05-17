@@ -6,7 +6,7 @@
 
     var jWindow = jQuery(window);
 
-    // all tracked element
+    // All tracked element
     var elements = [];
 
     /**
@@ -16,7 +16,7 @@
     var options = {
         top: 0,           // top margin (in px)
         spacer: true,     // create spacer
-        saveWidth: false, // save width element
+        saveWidth: true, // save width element
         parent: false     // change parent element
     };
 
@@ -59,7 +59,9 @@
                     this.before( new_element.variables.spacer );
                 }
 
-                this.data('sticky', true);
+                this
+                    .addClass('plg-sticky')
+                    .data('sticky', true);
 
                 if(!elements.length)
                     jWindow.scroll( _scroll );
@@ -84,6 +86,7 @@
                         _unstick(element);
                         elements.splice(counter, 1);
                         self
+                            .removeClass('plg-sticky')
                             .removeData('sticky')
                             .off('stickyfloat');
 
@@ -135,16 +138,18 @@
 
         _unstick(element);
 
+        var elWidth = element.object.outerWidth(true);
+
         if( element.options.saveWidth )
-            element.object.css({width: element.object.outerWidth(true) + 'px'});
+            element.object.css({width: elWidth + 'px'});
 
         element.object
             .css({top: element.options.top + 'px'})
-            .addClass('sticked');
+            .addClass('plg-sticked');
 
-        if(element.variables.spacer && !element.object.is(':empty')) {
+        if(element.variables.spacer && element.variables.spacer.css('display') !== 'inherit' && !element.object.is(':empty')) {
             element.variables.spacer.css({
-                width: '20px',
+                width: elWidth + 'px',
                 height: element.object.outerHeight(true),
                 display: 'inherit'
             });
@@ -166,13 +171,13 @@
 
         element.object
             .css({top:''})
-            .removeClass('sticked-stop')
-            .removeClass('sticked');
+            .removeClass('plg-sticked-stop')
+            .removeClass('plg-sticked');
 
         if( element.options.saveWidth )
             element.object.css({width:''});
 
-        if(element.variables.spacer && !element.object.is(':empty') && !element.variables.stop)
+        if(element.variables.spacer && !element.variables.stop && !element.object.is(':empty'))
             element.variables.spacer.css({display: 'none'});
 
         element.variables.stop = false;
@@ -186,17 +191,12 @@
      */
     var _stop = function (element) {
 
+        if(element.variables.parent.css('position') !== 'relative' || element.variables.parent.css('position') !== 'absolute')
+            element.variables.parent.css('position', 'relative');
+
         element.object
-          /*  .css({
-                top:
-                    (
-                        element.variables.parent.css('position') === 'relative' ? 0 : element.variables.distance
-                    )
-                    + element.variables.parent.outerHeight()
-                    - element.object.outerHeight()
-            })*/
-            .addClass('sticked-stop')
-            .removeClass('sticked');
+            .addClass('plg-sticked-stop')
+            .removeClass('plg-sticked');
 
         element.variables.stop  = true;
 
