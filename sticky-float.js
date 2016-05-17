@@ -119,7 +119,9 @@
                     _stick(el);
                 } else if (el.variables.stick && scrollTop <= el.variables.distance) {
                     _unstick(el);
-                } else if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
+                }
+
+                if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
                     _stop(el);
                 } else if (el.variables.stop  && (scrollTop <= (parentHeight + el.variables.offset))) {
                     _stick(el);
