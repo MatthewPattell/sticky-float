@@ -26,6 +26,7 @@
      */
     var variables = {
         distance: 0,
+        outer_width: 0,
         parent: null,
         offset: 0,
         spacer: false,
@@ -50,6 +51,7 @@
                     variables: $.extend({}, variables, {})
                 };
 
+                new_element.variables.outer_width = this.outerWidth(true);
                 new_element.variables.distance = this.offset().top - new_element.options.top;
                 new_element.variables.parent   = new_element.options.parent ? new_element.options.parent : this.parent();
                 new_element.variables.offset   = new_element.variables.parent.offset().top - new_element.options.top - this.outerHeight(true);
@@ -63,8 +65,9 @@
                     .addClass('plg-sticky')
                     .data('sticky', true);
 
-                if(!elements.length)
-                    jWindow.scroll( _scroll );
+                if(!elements.length) {
+                    jWindow.scroll(_scroll);
+                }
 
                 elements.push(new_element );
             }
@@ -81,6 +84,7 @@
 
             if( self.data('sticky') ) {
                 $.each(elements, function (counter, element) {
+
                     if(element && element.object.get(0) === self.get(0)) {
 
                         _unstick(element);
@@ -92,11 +96,13 @@
 
                         return true;
                     }
+
                 });
             }
 
-            if( !elements.length )
+            if( !elements.length ) {
                 jWindow.off('scroll', _scroll);
+            }
         }
     };
 
@@ -105,30 +111,32 @@
      */
     var _scroll = $.throttle(10, function () {
 
-        if( elements.length ) {
-
-            // window scroll
-            var scrollTop = jWindow.scrollTop();
-
-            $.each(elements, function (counter, el) {
-
-                // parent height
-                var parentHeight = el.variables.parent.outerHeight();
-
-                if (!el.variables.stick && !el.variables.stop && (scrollTop >= el.variables.distance)) {
-                    _stick(el);
-                } else if (el.variables.stick && scrollTop <= el.variables.distance) {
-                    _unstick(el);
-                }
-
-                if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
-                    _stop(el);
-                } else if (el.variables.stop  && (scrollTop <= (parentHeight + el.variables.offset))) {
-                    _stick(el);
-                }
-
-            });
+        if( !elements.length ) {
+            return true;
         }
+
+        // window scroll
+        var scrollTop = jWindow.scrollTop();
+
+        $.each(elements, function (counter, el) {
+
+            // parent height
+            var parentHeight = el.variables.parent.outerHeight();
+
+            if (!el.variables.stick && !el.variables.stop && (scrollTop >= el.variables.distance)) {
+                _stick(el);
+            } else if (el.variables.stick && scrollTop <= el.variables.distance) {
+                _unstick(el);
+            }
+
+            if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
+                _stop(el);
+            } else if (el.variables.stop  && (scrollTop <= (parentHeight + el.variables.offset))) {
+                _stick(el);
+            }
+
+        });
+
     });
 
     /**
@@ -140,10 +148,9 @@
 
         _unstick(element);
 
-        var elWidth = element.object.outerWidth(true);
-
-        if( element.options.saveWidth )
-            element.object.css({width: elWidth + 'px'});
+        if( element.options.saveWidth ) {
+            element.object.css({width: element.variables.outer_width + 'px'});
+        }
 
         element.object
             .css({top: element.options.top + 'px'})
@@ -151,7 +158,7 @@
 
         if(element.variables.spacer && element.variables.spacer.css('display') !== 'inherit' && !element.object.is(':empty')) {
             element.variables.spacer.css({
-                width: elWidth + 'px',
+                width: element.variables.outer_width + 'px',
                 height: element.object.outerHeight(true),
                 display: 'inherit'
             });
@@ -168,19 +175,22 @@
      */
     var _unstick = function (element) {
 
-        if(!element.variables.stick)
+        if(!element.variables.stick) {
             return false;
+        }
 
         element.object
             .css({top:''})
             .removeClass('plg-sticked-stop')
             .removeClass('plg-sticked');
 
-        if( element.options.saveWidth )
-            element.object.css({width:''});
+        if( element.options.saveWidth ) {
+            element.object.css({width: ''});
+        }
 
-        if(element.variables.spacer && !element.variables.stop && !element.object.is(':empty'))
+        if(element.variables.spacer && !element.variables.stop && !element.object.is(':empty')) {
             element.variables.spacer.css({display: 'none'});
+        }
 
         element.variables.stop = false;
         element.variables.stick= false;
@@ -193,8 +203,9 @@
      */
     var _stop = function (element) {
 
-        if(element.variables.parent.css('position') !== 'relative' || element.variables.parent.css('position') !== 'absolute')
+        if(element.variables.parent.css('position') !== 'relative' || element.variables.parent.css('position') !== 'absolute') {
             element.variables.parent.css('position', 'relative');
+        }
 
         element.object
             .addClass('plg-sticked-stop')
