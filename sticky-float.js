@@ -18,8 +18,7 @@
         spacer: true,     // create spacer
         saveWidth: true,  // save width element
         parent: false,    // change parent element
-        bottomStop: true, // stop element in parent bottom
-        dynContent: true  // dynamic height parent
+        bottomStop: true  // stop element in parent bottom
     };
 
     /**
@@ -58,10 +57,7 @@
                 new_element.variables.distance = this.offset().top - new_element.options.top;
                 new_element.variables.parent   = new_element.options.parent ? new_element.options.parent : this.parent();
                 new_element.variables.offset   = new_element.variables.parent.offset().top - new_element.options.top - this.outerHeight(true);
-
-                if(!new_element.options.dynContent) {
-                    new_element.variables.parentHeight = new_element.variables.parent.outerHeight();
-                }
+                new_element.variables.parentHeight = new_element.variables.parent.outerHeight();
 
                 if (new_element.options.spacer) {
                     new_element.variables.spacer = $("<div />");
@@ -76,7 +72,7 @@
                     jWindow.scroll(_scroll);
                 }
 
-                elements.push(new_element );
+                elements.push(new_element);
             }
 
             return this;
@@ -127,11 +123,8 @@
 
         $.each(elements, function (counter, el) {
 
-            // parent height
-            var parentHeight = el.options.dynContent ? el.variables.parent.outerHeight() : el.variables.parentHeight;
-
             _recalc_var(el);
-
+console.log(  );
             if (!el.variables.stick && !el.variables.stop && (scrollTop >= el.variables.distance)) {
                 _stick(el);
             } else if (el.variables.stick && scrollTop <= el.variables.distance) {
@@ -140,9 +133,9 @@
 
             // stop element in parent bottom?
             if(el.options.bottomStop) {
-                if (!el.variables.stop && (scrollTop >= (parentHeight + el.variables.offset))) {
+                if (!el.variables.stop && (scrollTop >= (el.variables.parentHeight + el.variables.offset))) {
                     _stop(el);
-                } else if (el.variables.stop && (scrollTop <= (parentHeight + el.variables.offset))) {
+                } else if (el.variables.stop && (scrollTop <= (el.variables.parentHeight + el.variables.offset))) {
                     _stick(el);
                 }
             }
@@ -228,11 +221,13 @@
         element.object.trigger('stickyfloat.stopEvent');
     };
 
-    var _recalc_var = $.throttle(700, function (element) {
+    var _recalc_var = function (element) {
 
         element.variables.distance = element.variables.parent.offset().top - element.options.top;
-        //element.variables.offset   = element.variables.parent.offset().top - element.options.top - element.object.outerHeight(true);
-    });
+        element.variables.offset   = element.variables.parent.offset().top - element.options.top - element.object.outerHeight(true);
+        element.variables.parentHeight  = element.variables.parent.outerHeight();
+
+    };
 
     $.fn.stickyfloat = function( method ) {
 
