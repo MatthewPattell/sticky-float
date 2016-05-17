@@ -44,7 +44,7 @@ $('.example').stickyfloat({
     spacer: true,     // create spacer (boolean | default: true)
     saveWidth: true,  // save width element (boolean | default: true)
     parent: false,    // change parent element (boolean or jQuery element | default: false)
-    bottomStop: true  // stop element in parent bottom
+    bottomStop: true  // stop element in parent bottom (boolean | default: true)
 });
 ```
 
