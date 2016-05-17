@@ -18,7 +18,8 @@
         spacer: true,     // create spacer
         saveWidth: true,  // save width element
         parent: false,    // change parent element
-        bottomStop: true  // stop element in parent bottom
+        bottomStop: true, // stop element in parent bottom
+        dynContent: true  // dynamic height parent
     };
 
     /**
@@ -29,6 +30,7 @@
         distance: 0,
         outer_width: 0,
         parent: null,
+        parentHeight: 0,
         offset: 0,
         spacer: false,
         stick: false,
@@ -52,10 +54,14 @@
                     variables: $.extend({}, variables, {})
                 };
 
-                new_element.variables.outer_width = this.outerWidth(true);
+                new_element.variables.outer_width  = this.outerWidth(true);
                 new_element.variables.distance = this.offset().top - new_element.options.top;
                 new_element.variables.parent   = new_element.options.parent ? new_element.options.parent : this.parent();
                 new_element.variables.offset   = new_element.variables.parent.offset().top - new_element.options.top - this.outerHeight(true);
+
+                if(!new_element.options.dynContent) {
+                    new_element.variables.parentHeight = new_element.variables.parent.outerHeight();
+                }
 
                 if (new_element.options.spacer) {
                     new_element.variables.spacer = $("<div />");
@@ -116,13 +122,13 @@
             return true;
         }
 
-        // window scroll
+        // window scroll offset
         var scrollTop = jWindow.scrollTop();
 
         $.each(elements, function (counter, el) {
 
             // parent height
-            var parentHeight = el.variables.parent.outerHeight();
+            var parentHeight = el.options.dynContent ? el.variables.parent.outerHeight() : el.variables.parentHeight;
 
             if (!el.variables.stick && !el.variables.stop && (scrollTop >= el.variables.distance)) {
                 _stick(el);
