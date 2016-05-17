@@ -18,7 +18,7 @@
         spacer: true,     // create spacer
         saveWidth: true,  // save width element
         parent: false,    // change parent element
-        bottomStop: true  // stop bottom parent
+        bottomStop: true  // stop element in parent bottom
     };
 
     /**

@@ -40,10 +40,11 @@ $('.example').stickyfloat();
 Options:
 ```js
 $('.example').stickyfloat({
-    top: 0,           // top margin (number in px)
-    spacer: true,     // create spacer (boolean)
-    saveWidth: false, // save width element (boolean)
-    parent: false     // change parent element (boolean or jQuery element)
+    top: 0,           // top margin (number in px | default: 0)
+    spacer: true,     // create spacer (boolean | default: true)
+    saveWidth: true,  // save width element (boolean | default: true)
+    parent: false,    // change parent element (boolean or jQuery element | default: false)
+    bottomStop: true  // stop element in parent bottom
 });
 ```
 
