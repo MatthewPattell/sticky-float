@@ -130,6 +130,8 @@
             // parent height
             var parentHeight = el.options.dynContent ? el.variables.parent.outerHeight() : el.variables.parentHeight;
 
+            _recalc_var(el);
+
             if (!el.variables.stick && !el.variables.stop && (scrollTop >= el.variables.distance)) {
                 _stick(el);
             } else if (el.variables.stick && scrollTop <= el.variables.distance) {
@@ -225,6 +227,12 @@
 
         element.object.trigger('stickyfloat.stopEvent');
     };
+
+    var _recalc_var = $.throttle(700, function (element) {
+
+        element.variables.distance = element.variables.parent.offset().top - element.options.top;
+        //element.variables.offset   = element.variables.parent.offset().top - element.options.top - element.object.outerHeight(true);
+    });
 
     $.fn.stickyfloat = function( method ) {
 
